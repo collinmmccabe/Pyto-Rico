@@ -91,5 +91,6 @@ class Player(name):
         trade_value = {'corn': 0, 'indigo': 1, 'sugar': 2, 'tobacco': 3, 'coffee': 4}
         if self._resources[good] > 0:
             self._resources[good] -= 1
-            return good, self.get_doubloons(trade_value[good])  # for TradingPost.trading_queue.append(good)
-        return None, None
+            self.get_doubloons(trade_value[good])
+            return good  # for TradingPost.trading_queue.append(good)
+        return None
