@@ -1,3 +1,9 @@
+class DictRef(dict):
+    def __getattr__(self, key):
+        return self[key]
+    def __setattr__(self, key, value):
+        self[key] = value
+
 class Player(object):
     def __init__(self, name):
         self.name = name
@@ -9,52 +15,48 @@ class Player(object):
         self.city = self.City()
         self.supply = self.Barrels()
 
-    class DictRef(dict):
-        def __getattr__(self, key):
-            return self[key]
-
-        def __setattr__(self, key, value):
-            self[key] = value
-
     class Island(DictRef):
         def __init__(self):
             for n in range(1, 13):
                 setattr(self, 'plot_' + str(n).zfill(2), None)  # i.e. self.plot_01 = Plantation()
-        def move_plantation(self, from_plot, to_plot):  # :/ tuple swapping won't work for this
-            tmp = getattr(self, from_plot)
-            setattr(self, from_plot, getattr(self, to_plot))
-            setattr(self, to_plot, tmp)
+
+        def swap_plots(self, from_plot, to_plot):
+            self[from_plot], self[to_plot] = self[to_plot], self[from_plot]
             return None
-        def it(self):
-            for n in range(1, 13):
-                yield getattr(self, 'plot_' + str(n).zfill(2))
-    
-    class Plantation(DictRef):
-        def __init__(self, good_produced):
-            self.good_produced = good_produced
-            self.occupied = False
+        def plots_built(self):
+            return sum(1 for i in self.values() if i is not None)
+        def build(self, island_plot, good_produced):
+            if ((self.plots_built() < 12) and (self[island_plot] is None)):
+                self[island_plot] = self.Plantation(good_produced)
+            return None
+
+        class Plantation(DictRef):
+            def __init__(self, good_produced):
+                self.good_produced = good_produced
+                self.occupied = False
     
     class City(DictRef):
         def __init__(self):
             for n in range(1, 13):
-                setattr(self, 'plot_' + str(n).zfill(2), None)  # i.e. self.plot_01 = Plantation()
-        def move_building(self, from_plot, to_plot):
-            if ((getattr(self, from_plot) is not None) and (getattr(self, from_plot).size == 2)):
+                setattr(self, 'plot_' + str(n).zfill(2), None)  # i.e. self.plot_01 = Building()
+
+        def swap_plots(self, from_plot, to_plot):
+            if ((self[from_plot] is not None) and (self[from_plot].size == 2)):
                 from_plot_plus_one = 'plot_' + str(int(from_plot[-2:]) + 1).zfill(2)
                 to_plot_plus_one = 'plot_' + str(int(to_plot[-2:]) + 1).zfill(2)
                 self.move_building(from_plot_plus_one, to_plot_plus_one)
-            tmp = self[from_plot]
-            setattr(self, from_plot, getattr(self, to_plot))
-            setattr(self, to_plot, tmp)
+            self[from_plot], self[to_plot] = self[to_plot], self[from_plot]
             return None
+        def plots_built(self):
+            return sum(1 for i in self.values() if i is not None)
             
-    class Building(DictRef):
-        def __init__(self, building_lookup):
-            self.building_name = building_lookup.name
-            self.size = building_lookup.size
-            self.good_processed = building_lookup.good_processed
-            self.free_worker_spaces = building_lookup.free_worker_spaces
-            self.occupied_worker_spaces = 0
+        class Building(DictRef):
+            def __init__(self, building_lookup):
+                self.building_name = building_lookup.name
+                self.size = building_lookup.size
+                self.good_processed = building_lookup.good_processed
+                self.free_worker_spaces = building_lookup.free_worker_spaces
+                self.occupied_worker_spaces = 0
     
     class Barrels(DictRef):
         def __init__(self):
@@ -82,17 +84,11 @@ class Player(object):
         self.governor_flag = bool_value
         return None
     
-    def occupied_island_plots(self):
-        for i in self.island.it():
-            if i is None:
-                print('Nope')
-        return sum(1 for i in self.island.it() if i is not None)
-    def build_plantation(self, island_plot, good_produced):
-        if ((self.occupied_island_plots() < 12) and (self.island[island_plot] is None)):
-            self.island[island_plot] = self.Plantation(good_produced)  # not sure about [] referencing here and elsewhere...
-        return None
     def produce_plantation(self, market_supply_dict):  # send the market supply here to communicate with fn
-        for good_type in ['corn', 'indigo', 'sugar', 'tobacco', 'coffee']:  # could replace list with keys of mkt spl d
+        taken = min(sum(1 for i in self.island if (i.good_produced == 'corn' and i.occupied)), market_supply_dict.corn)
+        market_supply_dict.corn -= taken
+        self.supply.corn += taken
+        for good_type in ['indigo', 'sugar', 'tobacco', 'coffee']:  # could replace list with keys of mkt spl d
             taken = min(min(sum(1 for i in self.island if (i.good_produced == good_type and i.occupied)), 
                             sum(j.occupied_worker_spaces for j in self.city if j.good_processed == good_type)), 
                         market_supply_dict[good_type])
@@ -111,8 +107,6 @@ class Player(object):
             self.free_colonists += 1
         return None
     
-    def occupied_city_plots(self):
-        return sum(1 for i in self.city if i is not None)
     def build_building(self, city_plot, building_lookup, cost):  # specific building lookup is BuildingLookup[building_name]
         endgame_trigger = False
         if ((building_lookup.size + self.occupied_city_plots() <= 12) and (self.city[city_plot] is None) and
