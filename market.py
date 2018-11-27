@@ -1,7 +1,7 @@
 import random
 
-class Market(colonists, vp, barrel_dict, plantation_list, quarries, building_dict, prospectors, ship_size_list):
-    def __init__(self):
+class Market(object):
+    def __init__(self, colonists, vp, barrel_dict, plantation_list, quarries, building_dict, prospectors, ship_size_list):
         self._endgame_trigger = False
         self._buildings = Buildings(building_dict)
         self._plantations = Plantations(plantation_list, quarries)
@@ -11,14 +11,14 @@ class Market(colonists, vp, barrel_dict, plantation_list, quarries, building_dic
         self._colonist_ship = ColonistShip(colonists)
         self._supply = Supply(barrel_dict, vp)
 
-class Buildings(building_dict):
-    def __init__(self):
+class Buildings(object):
+    def __init__(self, building_dict):
         self._available_buildings = building_dict
     def building_taken(self, building):
         if self._available_buildings[building] > 0:
             self._available_buildings[building] -= 1
 
-class Plantations(plantation_list, quarries):
+class Plantations(object):
     def __init__(self, plantation_list, quarries):
         self._face_down_pool = plantation_list
         self._face_up_pool = []
@@ -31,7 +31,7 @@ class Plantations(plantation_list, quarries):
         return None
     def quarry_taken(self):
         if self._quarries > 0:
-            self.quarries -= 1
+            self._quarries -= 1
             return 'quarry'
         return None
     def draw_new_tiles(self, num_players):
@@ -47,12 +47,12 @@ class Plantations(plantation_list, quarries):
                 self._discard_pool.clear()
         return None
 
-class RoleOptions(prospectors):
+class RoleOptions(object):
     def __init__(self, prospectors):
         self._role_list = [Role('mayor'), Role('captain'), Role('etc')]
         self._role_list += (Role('prospector') * prospectors)
-        class Role(role_name):
-            def __init__(self):
+        class Role(object):
+            def __init__(self, role_name):
                 self._role_name = role_name
                 self._stored_doubloons = 0
                 self._taken_flag = False
@@ -76,13 +76,13 @@ class TradingPost():
             Supply.Barrels[self._trading_queue.pop()] += 1
         return None
 
-class CaptainShips(ship_size_list):
+class CaptainShips(object):
     def __init__(self, ship_size_list):
         self._ship_list = []
         for ship_size in ship_size_list:
             self._ship_list.append(Ship(ship_size))
-        class Ship(size):
-            def __init__(self):
+        class Ship(object):
+            def __init__(self, size):
                 self._free_space = size
                 self._used_space = 0
                 self._good_type = None
@@ -100,7 +100,7 @@ class CaptainShips(ship_size_list):
                     self._used_space = 0
                 return None
 
-class ColonistShip(colonists):
+class ColonistShip(object):
     def __init__(self, colonists):
         self._colonists_carried = 0
         self._colonists_supply = colonists
@@ -113,8 +113,8 @@ class ColonistShip(colonists):
             self._colonists_supply = 0
             Market.endgame_trigger = True
 
-class Supply(barrel_dict, vp):
-    def __init__(self):
+class Supply(object):
+    def __init__(self, barrel_dict, vp):
         self._barrels = barrel_dict
         self._vp = vp
     def check_vp_supply(self):
