@@ -1,7 +1,7 @@
 import random
 
-class Market(colonists, vp, barrel_dict, plantation_list, quarries, building_dict, prospectors, ship_size_list):
-    def __init__(self):
+class Market(object):
+    def __init__(self, colonists, vp, barrel_dict, plantation_list, quarries, building_dict, prospectors, ship_size_list):
         self._endgame_trigger = False
         self._buildings = Buildings(building_dict)
         self._plantations = Plantations(plantation_list, quarries)
