@@ -1,26 +1,40 @@
 import random
+from setup_dict import setup_dict
+from building_lookup import building_lookup
+
+class DictRef(dict):
+    def __getattr__(self, key):
+        return self[key]
+    def __setattr__(self, key, value):
+        self[key] = value
 
 class Market(object):
-    def __init__(self, colonists, vp, barrel_dict, plantation_list, quarries, building_dict, prospectors, ship_size_list):
-        self._endgame_trigger = False
-        self._buildings = Buildings(building_dict)
-        self._plantations = Plantations(plantation_list, quarries)
-        self._role_options = RoleOptions(prospectors)
-        self._trading_post = TradingPost()
-        self._captain_ships = CaptainShips(ship_size_list)
-        self._colonist_ship = ColonistShip(colonists)
-        self._supply = Supply(barrel_dict, vp)
+    def __init__(self, setup_subdict):
+        self.endgame_trigger = False
+        self.buildings = self.Buildings(setup_subdict.building_dict)
+        self.plantations = self.Plantations(setup_subdict.plantation_dict, setup_subdict.quarries)
+        self.role_options = self.RoleOptions(setup_subdict.prospectors)
+        self.trading_post = self.TradingPost()
+        self.captain_ships = self.CaptainShips(setup_subdict.ship_size_list)
+        self.colonist_ship = self.ColonistShip(setup_subdict.colonists)
+        self.supply = self.Supply(setup_subdict.barrel_dict, setup_subdict.vp)
 
-class Buildings(object):
-    def __init__(self, building_dict):
-        self._available_buildings = building_dict
-    def building_taken(self, building):
-        if self._available_buildings[building] > 0:
-            self._available_buildings[building] -= 1
+    class Buildings(DictRef):
+        def __init__(self, building_dict):
+            for building in building_dict.key():
+                setattr(self, building, { 'available': building_dict[building], 'info': self.Building(building) })
+
+        def building_taken(self, building):
+            if self._available_buildings[building] > 0:
+                self._available_buildings[building] -= 1
+
+        class Building(DictRef):
+            def __init__(self, building_name):
+                setattr(self, 'properties', building_lookup[building_name])
 
 class Plantations(object):
-    def __init__(self, plantation_list, quarries):
-        self._face_down_pool = plantation_list
+    def __init__(self, plantation_dict, quarries):
+        self._face_down_pool = plantation_dict
         self._face_up_pool = []
         self._discard_pool = []
         self._quarries = quarries
