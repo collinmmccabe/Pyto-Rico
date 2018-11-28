@@ -1,3 +1,5 @@
+from setup_dict import player_init
+
 class DictRef(dict):
     def __getattr__(self, key):
         return self[key]
@@ -5,19 +7,20 @@ class DictRef(dict):
         self[key] = value
 
 class Player(object):
-    def __init__(self, name):
+    def __init__(self, name, player_init_subdict):
         self.name = name
-        self.doubloons = 0
+        self.doubloons = player_init_subdict.doubloons
         self.vp = 0
         self.free_colonists = 0
-        self.governor_flag = False
-        self.island = self.Island()
+        self.governor_flag = player_init_subdict.governor
+        self.island = self.Island(player_init_subdict.first_plantation)
         self.city = self.City()
         self.supply = self.Barrels()
 
     class Island(DictRef):
-        def __init__(self):
-            for n in range(1, 13):
+        def __init__(self, first_plantation):
+            setattr(self, 'plot_01', self.Plantation(first_plantation))
+            for n in range(2, 13):
                 setattr(self, 'plot_' + str(n).zfill(2), None)  # i.e. self.plot_01 = Plantation()
 
         def swap_plots(self, from_plot, to_plot):
@@ -84,6 +87,25 @@ class Player(object):
         self.governor_flag = bool_value
         return None
     
+    def add_colonist(self, region, plot):
+        if ((region == 'island') and (not self.island[plot].occupied) and (self.free_colonists > 0)):
+            self.island[plot].occupied = True
+            self.free_colonists -= 1
+        elif ((region == 'city') and (self.city[plot].free_worker_spaces > 0) and (self.free_colonists > 0)):
+            self.city[plot].occupied_worker_spaces += 1
+            self.city[plot].free_worker_spaces -= 1
+            self.free_colonists -= 1
+        return None
+    def remove_colonist(self, region, plot):
+        if ((region == 'island') and (self.island[plot].occupied)):
+            self.island[plot].occupied = False
+            self.free_colonists += 1
+        elif ((region == 'city') and (self.city[plot].occupied_worker_spaces > 0)):
+            self.city[plot].occupied_worker_spaces -= 1
+            self.city[plot].free_worker_spaces += 1
+            self.free_colonists += 1
+        return None
+    
     def produce_plantation(self, market_supply_dict):  # send the market supply here to communicate with fn
         taken = min(sum(1 for i in self.island if (i.good_produced == 'corn' and i.occupied)), market_supply_dict.corn)
         market_supply_dict.corn -= taken
@@ -96,49 +118,27 @@ class Player(object):
             self.supply[good_type] += taken
         # Maybe use return value to communicate with Market class?
         return market_supply_dict
-    def add_colonist_plantation(self, island_plot):
-        if ((not self.island[island_plot].occupied) and (self.free_colonists > 0)):
-            self.island[island_plot].occupied = True
-            self.free_colonists -= 1
-        return None
-    def remove_colonist_plantation(self, island_plot):
-        if self.island[island_plot].occupied:
-            self.island[island_plot].occupied = False
-            self.free_colonists += 1
-        return None
     
     def build_building(self, city_plot, building_lookup, cost):  # specific building lookup is BuildingLookup[building_name]
         endgame_trigger = False
-        if ((building_lookup.size + self.occupied_city_plots() <= 12) and (self.city[city_plot] is None) and
-          (building_lookup.name not in [i.building_name for i in self.city]) and
+        if ((building_lookup.size + self.city.plots_built() <= 12) and (self.city[city_plot] is None) and
+          (building_lookup.name not in [i.building_name for i in self.city if i is not None]) and
           (cost <= self.doubloons)):
             if ((building_lookup.size == 2) and (self.city['plot_' + str(int(city_plot[-2:]) + 1).zfill(2)] is None)):
-                self.city['plot_' + str(int(city_plot[-2:]) + 1).zfill(2)] = self.Building({
+                self.city['plot_' + str(int(city_plot[-2:]) + 1).zfill(2)] = self.city.Building({
                                                                                 'name': 'second plot for large building',
                                                                                 'size': 0,
                                                                                 'good_processed': None,
                                                                                 'free_worker_spaces': 0 })
-                self.city[city_plot] = self.Building(building_lookup)
+                self.city[city_plot] = self.city.Building(building_lookup)
             elif building_lookup.size == 1:
-                self.city[city_plot] = self.Building(building_lookup)
+                self.city[city_plot] = self.city.Building(building_lookup)
             else:
                 return endgame_trigger, None
-            if self.occupied_city_plots() == 12:
+            if self.city.plots_built() == 12:
                 endgame_trigger = True
             return endgame_trigger, self.lose_doubloons(cost)  # Use return value to communicate with Market class
         return endgame_trigger, None
-    def add_colonist_building(self, city_plot):
-        if self.city[city_plot].free_worker_spaces > 0 and self.free_colonists > 0:
-            self.city[city_plot].occupied_worker_spaces += 1
-            self.city[city_plot].free_worker_spaces -= 1
-            self.free_colonists -= 1
-        return None
-    def remove_colonist_building(self, city_plot):
-        if self.city[city_plot].occupied_worker_spaces > 0:
-            self.city[city_plot].occupied_worker_spaces -= 1
-            self.city[city_plot].free_worker_spaces += 1
-            self.free_colonists += 1
-        return None
 
     def ship_resources(self, good, number):
         if self.supply[good] >= number:
