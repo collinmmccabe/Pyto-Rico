@@ -1,2 +1,3 @@
 .DS_Store
-PytoRico.code-workspace
+*.code-workspace
+*.cpython-37.pyc
