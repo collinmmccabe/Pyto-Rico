@@ -1,5 +1,3 @@
-from setup_dict import player_init
-
 class DictRef(dict):
     def __getattr__(self, key):
         return self[key]
@@ -9,11 +7,11 @@ class DictRef(dict):
 class Player(object):
     def __init__(self, name, player_init_subdict):
         self.name = name
-        self.doubloons = player_init_subdict.doubloons
+        self.doubloons = player_init_subdict['doubloons']
         self.vp = 0
         self.free_colonists = 0
-        self.governor_flag = player_init_subdict.governor
-        self.island = self.Island(player_init_subdict.first_plantation)
+        self.governor_flag = player_init_subdict['governor']
+        self.island = self.Island(player_init_subdict['first_plantation'])
         self.city = self.City()
         self.supply = self.Barrels()
 
@@ -152,3 +150,46 @@ class Player(object):
             self.get_doubloons(trade_value[good])
             return good  # for TradingPost.trading_queue.append(good)
         return None
+    
+    def __repr__(self):
+        gov_desc = "not " if not self.governor_flag else ""
+        return ("\n{} is {}currently the governor.\n\nWEALTH:\n"
+                "doubloons: {}, victory points: {}, available colonists: {}\n"
+                "\nSUPPLY:\ncorn: {}, indigo: {}, sugar:{}, tobacco: {}, coffee: {}\n"
+                "\nISLAND:\nPlot 01: {}\nPlot 02: {}\nPlot 03: {}\nPlot 04: {}\nPlot 05: {}\nPlot 06: {}"
+                "\nPlot 07: {}\nPlot 08: {}\nPlot 09: {}\nPlot 10: {}\nPlot 11: {}\nPlot 12: {}\n"
+                "\nCITY:\nPlot 01: {}\nPlot 02: {}\nPlot 03: {}\nPlot 04: {}\nPlot 05: {}\nPlot 06: {}"
+                "\nPlot 07: {}\nPlot 08: {}\nPlot 09: {}\nPlot 10: {}\nPlot 11: {}\nPlot 12: {}\n".format(self.name,
+                                                                                  gov_desc,
+                                                                                  str(self.doubloons),
+                                                                                  str(self.vp),
+                                                                                  str(self.free_colonists),
+                                                                                  str(self.supply.corn),
+                                                                                  str(self.supply.indigo),
+                                                                                  str(self.supply.sugar),
+                                                                                  str(self.supply.tobacco),
+                                                                                  str(self.supply.coffee),
+                                                                                  self.island.plot_01,
+                                                                                  self.island.plot_02,
+                                                                                  self.island.plot_03,
+                                                                                  self.island.plot_04,
+                                                                                  self.island.plot_05,
+                                                                                  self.island.plot_06,
+                                                                                  self.island.plot_07,
+                                                                                  self.island.plot_08,
+                                                                                  self.island.plot_09,
+                                                                                  self.island.plot_10,
+                                                                                  self.island.plot_11,
+                                                                                  self.island.plot_12,
+                                                                                  self.city.plot_01,
+                                                                                  self.city.plot_02,
+                                                                                  self.city.plot_03,
+                                                                                  self.city.plot_04,
+                                                                                  self.city.plot_05,
+                                                                                  self.city.plot_06,
+                                                                                  self.city.plot_07,
+                                                                                  self.city.plot_08,
+                                                                                  self.city.plot_09,
+                                                                                  self.city.plot_10,
+                                                                                  self.city.plot_11,
+                                                                                  self.city.plot_12))
