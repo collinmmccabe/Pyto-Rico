@@ -1,6 +1,6 @@
 from market import Market
-from player_flat_class import Player
-from starting_setup import player_init, setup_dict
+from player import Player
+from setup_dicts import SetupDicts
 
 #new_colonists = min(sum([j.free_worker_spaces for j in i._building_list for i in player_list]), len(player_list))
 
@@ -24,19 +24,21 @@ def main():
             print("You can't play Pyto Rico with more than 6 players...")
             another = False
 
+    setup = SetupDicts()
+
     print("Alright! It looks like we are playing with {} players.".format(len(player_names)))
     print("Since {} is the first player, they'll start as the governor.".format(player_names[0]))
     print("Everyone will start with {} doubloons, and the starting plantations "
-          "are as follows:".format(player_init[len(player_names)][0]["doubloons"]))
+          "are as follows:".format(setup.player_setup[len(player_names)][0]["doubloons"]))
     player_dict = {}
     for index, name in enumerate(player_names):
-        print("{}: {}".format(name, player_init[len(player_names)][index]["first_plantation"]))
-        player_dict[name] = Player(name, player_init[len(player_names)][index])
+        print("{}: {}".format(name, setup.player_setup[len(player_names)][index]["first_plantation"]))
+        player_dict[name] = Player(name, setup.player_setup[len(player_names)][index])
     
     print(player_dict)
 
     print("And here's the starting marketplace:")
-    market = Market(setup_dict[len(player_dict)], len(player_dict))
+    market = Market(setup.market_setup[len(player_dict)], len(player_dict))
     print(market.plantations.face_up_pool)
     market.trading_post.add_barrel('corn')
     market.empty_trading_queue()

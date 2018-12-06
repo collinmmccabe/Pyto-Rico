@@ -1,5 +1,9 @@
 import random
-from building_lookup import building_lookup
+
+# TODO: don't make two different instances of SetupDict
+from setup_dicts import SetupDicts
+setup = SetupDicts()
+building_lookup = setup.building_lookup
 
 class DictRef(dict):
     def __getattr__(self, key):
