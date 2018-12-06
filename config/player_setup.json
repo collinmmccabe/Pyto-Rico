@@ -1,0 +1,112 @@
+{
+    "2": {
+        "0": {
+            "doubloons": 3,
+            "first_plantation": "indigo",
+            "governor": true
+        },
+        "1": {
+            "doubloons": 3,
+            "first_plantation": "corn",
+            "governor": false
+        }
+    },
+    "3": {
+        "0": {
+            "doubloons": 2,
+            "first_plantation": "indigo",
+            "governor": true
+        },
+        "1": {
+            "doubloons": 2,
+            "first_plantation": "indigo",
+            "governor": false
+        },
+        "2": {
+            "doubloons": 2,
+            "first_plantation": "corn",
+            "governor": false
+        }
+    },
+    "4": {
+        "0": {
+            "doubloons": 3,
+            "first_plantation": "indigo",
+            "governor": true
+        },
+        "1": {
+            "doubloons": 3,
+            "first_plantation": "indigo",
+            "governor": false
+        },
+        "2": {
+            "doubloons": 3,
+            "first_plantation": "corn",
+            "governor": false
+        },
+        "3": {
+            "doubloons": 3,
+            "first_plantation": "corn",
+            "governor": false
+        }
+    },
+    "5": {
+        "0": {
+            "doubloons": 4,
+            "first_plantation": "indigo",
+            "governor": true
+        },
+        "1": {
+            "doubloons": 4,
+            "first_plantation": "indigo",
+            "governor": false
+        },
+        "2": {
+            "doubloons": 4,
+            "first_plantation": "indigo",
+            "governor": false
+        },
+        "3": {
+            "doubloons": 4,
+            "first_plantation": "corn",
+            "governor": false
+        },
+        "4": {
+            "doubloons": 4,
+            "first_plantation": "corn",
+            "governor": false
+        }
+    },
+    "6": {
+        "0": {
+            "doubloons": 5,
+            "first_plantation": "indigo",
+            "governor": true
+        },
+        "1": {
+            "doubloons": 5,
+            "first_plantation": "indigo",
+            "governor": false
+        },
+        "2": {
+            "doubloons": 5,
+            "first_plantation": "indigo",
+            "governor": false
+        },
+        "3": {
+            "doubloons": 5,
+            "first_plantation": "corn",
+            "governor": false
+        },
+        "4": {
+            "doubloons": 5,
+            "first_plantation": "corn",
+            "governor": false
+        },
+        "5": {
+            "doubloons": 5,
+            "first_plantation": "corn",
+            "governor": false
+        }
+    },
+}
