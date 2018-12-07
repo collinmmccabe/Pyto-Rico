@@ -1,5 +1,8 @@
-{
-    "2": {
+[
+    {"_description": "Empty market list for non-existent 0 player game"},
+    {"_description": "Empty market list for non-existent 1 player game"},
+    {
+        "_description": "Market list for 2 player game",
         "colonists": 42, 
         "vp": 65, 
         "barrel_dict": {
@@ -45,7 +48,8 @@
         "prospectors": 1,
         "ship_size_list": [4, 6]
     },
-    "3": {
+    {
+        "_description": "Market list for 3 player game",
         "colonists": 58, 
         "vp": 75, 
         "barrel_dict": {
@@ -91,7 +95,8 @@
         "prospectors": 0,
         "ship_size_list": [4, 5, 6]
     },
-    "4": {
+    {
+        "_description": "Market list for 4 player game",
         "colonists": 79, 
         "vp": 100, 
         "barrel_dict": {
@@ -137,7 +142,8 @@
         "prospectors": 1,
         "ship_size_list": [5, 6, 7] 
     },
-    "5": {
+    {
+        "_description": "Market list for 5 player game",
         "colonists": 100, 
         "vp": 122, 
         "barrel_dict": {
@@ -183,7 +189,8 @@
         "prospectors": 2,
         "ship_size_list": [6, 7, 8] 
     },
-    "6": {
+    {
+        "_description": "Market list for 6 player game",
         "colonists": 121, 
         "vp": 150, 
         "barrel_dict": {
@@ -229,4 +236,4 @@
         "prospectors": 3,
         "ship_size_list": [7, 8, 9]
     }
-}
+]

@@ -1,112 +1,134 @@
-{
-    "2": {
-        "0": {
+[
+    [{"_description": "Empty player list for non-existent 0 player game"}],
+    [{"_description": "Empty player list for non-existent 1 player game"}],
+    [
+        {
+            "_description": "Player 1 in a 2 player game",
             "doubloons": 3,
             "first_plantation": "indigo",
             "governor": true
         },
-        "1": {
+        {
+            "_description": "Player 2 in a 2 player game",
             "doubloons": 3,
             "first_plantation": "corn",
             "governor": false
         }
-    },
-    "3": {
-        "0": {
+    ],
+    [
+        {
+            "_description": "Player 1 in a 3 player game",
             "doubloons": 2,
             "first_plantation": "indigo",
             "governor": true
         },
-        "1": {
+        {
+            "_description": "Player 2 in a 3 player game",
             "doubloons": 2,
             "first_plantation": "indigo",
             "governor": false
         },
-        "2": {
+        {
+            "_description": "Player 3 in a 3 player game",
             "doubloons": 2,
             "first_plantation": "corn",
             "governor": false
         }
-    },
-    "4": {
-        "0": {
+    ],
+    [
+        {
+            "_description": "Player 1 in a 4 player game",
             "doubloons": 3,
             "first_plantation": "indigo",
             "governor": true
         },
-        "1": {
+        {
+            "_description": "Player 2 in a 4 player game",
             "doubloons": 3,
             "first_plantation": "indigo",
             "governor": false
         },
-        "2": {
+        {
+            "_description": "Player 3 in a 4 player game",
             "doubloons": 3,
             "first_plantation": "corn",
             "governor": false
         },
-        "3": {
+        {
+            "_description": "Player 4 in a 4 player game",
             "doubloons": 3,
             "first_plantation": "corn",
             "governor": false
         }
-    },
-    "5": {
-        "0": {
+    ],
+    [
+        {
+            "_description": "Player 1 in a 5 player game",
             "doubloons": 4,
             "first_plantation": "indigo",
             "governor": true
         },
-        "1": {
+        {
+            "_description": "Player 2 in a 5 player game",
             "doubloons": 4,
             "first_plantation": "indigo",
             "governor": false
         },
-        "2": {
+        {
+            "_description": "Player 3 in a 5 player game",
             "doubloons": 4,
             "first_plantation": "indigo",
             "governor": false
         },
-        "3": {
+        {
+            "_description": "Player 4 in a 5 player game",
             "doubloons": 4,
             "first_plantation": "corn",
             "governor": false
         },
-        "4": {
+        {
+            "_description": "Player 5 in a 5 player game",
             "doubloons": 4,
             "first_plantation": "corn",
             "governor": false
         }
-    },
-    "6": {
-        "0": {
+    ],
+    [
+        {
+            "_description": "Player 1 in a 6 player game",
             "doubloons": 5,
             "first_plantation": "indigo",
             "governor": true
         },
-        "1": {
+        {
+            "_description": "Player 2 in a 6 player game",
             "doubloons": 5,
             "first_plantation": "indigo",
             "governor": false
         },
-        "2": {
+        {
+            "_description": "Player 3 in a 6 player game",
             "doubloons": 5,
             "first_plantation": "indigo",
             "governor": false
         },
-        "3": {
+        {
+            "_description": "Player 4 in a 6 player game",
             "doubloons": 5,
             "first_plantation": "corn",
             "governor": false
         },
-        "4": {
+        {
+            "_description": "Player 5 in a 6 player game",
             "doubloons": 5,
             "first_plantation": "corn",
             "governor": false
         },
-        "5": {
+        {
+            "_description": "Player 6 in a 6 player game",
             "doubloons": 5,
             "first_plantation": "corn",
             "governor": false
         }
-    },
-}
+    ]
+]
